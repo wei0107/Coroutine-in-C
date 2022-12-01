@@ -21,9 +21,9 @@
 /* The flags for deciding the scheduler of coroutine 
  */
 #define CR_DEFAULT 0x0001
-#define CR_FIFO 0x0002
+#define CR_FILO 0x0002
 
-#define CR_SCHED_MASK (CR_DEFAULT | CR_FIFO)
+#define CR_SCHED_MASK (CR_DEFAULT | CR_FILO)
 
 /**
  * coroutine_create - Create the coroutine
