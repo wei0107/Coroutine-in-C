@@ -10,9 +10,9 @@
 #include "coroutine.h"
 #include "coroutine_int.h"
 
-/* FIFO scheduler */
+/* FILO scheduler */
 
-static inline int fifo_schedule(struct cr *cr, job_t func, void *args)
+static inline int filo_schedule(struct cr *cr, job_t func, void *args)
 {
     struct task_struct *new_task;
 
@@ -35,12 +35,12 @@ static inline int fifo_schedule(struct cr *cr, job_t func, void *args)
     return new_task->tfd;
 }
 
-static inline struct task_struct *fifo_pick_next_task(struct cr *cr)
+static inline struct task_struct *filo_pick_next_task(struct cr *cr)
 {
     return rq_dequeue(&cr->rq);
 }
 
-static inline int fifo_put_prev_task(struct cr *cr, struct task_struct *prev)
+static inline int filo_put_prev_task(struct cr *cr, struct task_struct *prev)
 {
     return rq_enqueue(&cr->rq, prev);
 }
@@ -126,17 +126,8 @@ static inline int default_put_prev_task(struct cr *cr, struct task_struct *prev)
 
 void sched_init(struct cr *cr)
 {
-    switch (cr->flags) {
-    case CR_DEFAULT:
-        RB_ROOT_INIT(cr->root);
-        cr->schedule = default_schedule;
-        cr->pick_next_task = default_pick_next_task;
-        cr->put_prev_task = default_put_prev_task;
-        return;
-    case CR_FIFO:
-        rq_init(&cr->rq);
-        cr->schedule = fifo_schedule;
-        cr->pick_next_task = fifo_pick_next_task;
-        cr->put_prev_task = fifo_put_prev_task;
-    }
+    rq_init(&cr->rq);
+    cr->schedule = filo_schedule;
+    cr->pick_next_task = filo_pick_next_task;
+    cr->put_prev_task = filo_put_prev_task;
 }
