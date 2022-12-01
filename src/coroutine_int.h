@@ -41,7 +41,8 @@ struct task_struct {
 #define RINGBUFFER_SIZE 16
 
 struct rq {
-    unsigned int out, in; /* dequeue at out, enqueue  at in*/
+    //unsigned int out, in; /* dequeue at out, enqueue  at in*/]
+    unsigned int Top;//struct change to stack
     unsigned int mask; /* the size is power of two, so mask will be size - 1 */
     struct task_struct *r[RINGBUFFER_SIZE];
 };
